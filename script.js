@@ -22,11 +22,10 @@ let myLibrary = [];
 let cardColor;
 
 //object constructor that defines the parameters for each book 
-function Book(title, author, currentStatus, present) {
+function Book(title, author, currentStatus) {
     this.title = title;
     this.author = author;
     this.currentStatus = currentStatus;
-    this.present = present
 }
 
 //object method that creates a new "card" containg the new books information which is displayed to the page
