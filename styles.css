@@ -130,7 +130,7 @@ button {
     border: 2px solid black;
 }
 
-.books {
+#bookContainer {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 400px 400px;

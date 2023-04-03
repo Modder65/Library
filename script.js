@@ -2,7 +2,7 @@
 let content = document.getElementById('contentContainer');
 
 //access container for all book "cards" on the page
-let books = document.querySelector('.books');
+let books = document.getElementById('bookContainer');
 
 //access image that will later be used to display/hide the form on the page
 let addBook = document.getElementById('addBook');
@@ -17,21 +17,26 @@ let bookStatus = document.getElementById('status');
 
 //array that stores each new book
 let myLibrary = [];
+let currentIndex = 0;
 
 //placeholder variable that holds a boolean value which later determines the color for the top-border of the created "card"
 let cardColor;
 
 //object constructor that defines the parameters for each book 
-function Book(title, author, currentStatus) {
+function Book(title, author, currentStatus, color) {
     this.title = title;
     this.author = author;
     this.currentStatus = currentStatus;
+    this.color = color;
 }
 
 //object method that creates a new "card" containg the new books information which is displayed to the page
 Book.prototype.createCard = function () {
-    let newCard = document.createElement('div');
+
     let textContainer = document.createElement('div');
+    let newCard = document.createElement('div')
+    newCard.setAttribute("data-index", (myLibrary.length - 1));
+    let theIndex = newCard.getAttribute("data-index");
     let titleText = document.createElement('p');
     let authorText = document.createElement('p');
     let imgContainer = document.createElement('div');
@@ -40,20 +45,23 @@ Book.prototype.createCard = function () {
     let btnNotRead = document.createElement('button');
     if (cardColor == true) {
         newCard.style.borderColor = "green";
+        myLibrary[theIndex].color = "green";
     } else if (cardColor == false) {
         newCard.style.borderColor = "red";
+        myLibrary[theIndex].color = "red";
     }
     removeCard = document.createElement('img');
     newCard.className = "book";
     newCard.id = "newCard";
     textContainer.className = "textContainer";
     imgContainer.className = "imgContainer";
-    removeCard.setAttribute("src", "imgs/book-remove-outline.svg")
-    removeCard.setAttribute("onclick", "this.parentNode.parentNode.remove()");
+    removeCard.setAttribute("src", "imgs/book-remove-outline.svg");
+    removeCard.setAttribute("onclick", "NewDeletion(this)");
     removeCard.id = "removeCard";
     btnContainer.className = "btnContainer";
     btnRead.className = "btnRead";
-    btnRead.setAttribute("onclick", "read();");
+    btnRead.setAttribute("onclick", "read(this);");
+    btnNotRead.setAttribute("onclick", "notRead(this);")
     btnNotRead.className = "btnNotRead";
     books.appendChild(newCard);
     newCard.appendChild(textContainer);
@@ -88,6 +96,52 @@ function changeDisplay() {
     } else if (content.style.display = "flex") {
         content.style.display = "none";
     }
+}
+
+//function to delete and rearrange the cards on the page according to their correct data-index attribute values in correlation to the index of their corresponding object in the array
+function displayArray() {
+    let htmlText = "";
+    for (let i = 0; i < myLibrary.length; i++) { 
+        htmlText += "<div class='book' id='newCard' data-index="+i+" style='border-color: "+myLibrary[i].color+"'>";
+            htmlText += "<div class='textContainer'>";
+                htmlText += "<p>"+myLibrary[i].title+"</p>";
+                htmlText += "<p>by: "+myLibrary[i].author+"</p>";
+            htmlText += "</div>";
+            htmlText += "<div class='btnContainer'>";
+            htmlText += "<button class='btnRead' onclick='read(this);'>Read</button>";
+            htmlText += "<button class='btnNotRead' onclick='notRead(this);'>Not Read</button>";
+            htmlText += "</div>";
+            htmlText += "<div class='imgContainer'>";
+                htmlText += "<img src='imgs/book-remove-outline.svg' onclick='NewDeletion(this)' id='removeCard'>";
+            htmlText += "</div>";
+        htmlText += "</div>";
+    }
+    document.getElementById('bookContainer').innerHTML = htmlText;
+}
+
+//function that deletes the clicked card
+function NewDeletion(theThis) {
+    let theIndex = theThis.parentNode.parentNode.getAttribute('data-index');
+    myLibrary.splice(theIndex, 1);
+    theThis.parentNode.parentNode.remove();
+    displayArray();
+}
+
+
+//function that changes the status of a book to read, and changes the border-color to accurately represent the status
+function read(theThis) {
+    let theIndex = theThis.parentNode.parentNode.getAttribute('data-index');
+    theThis.parentNode.parentNode.style.borderColor = "green";
+    myLibrary[theThis.parentNode.parentNode.getAttribute("data-index")].currentStatus = "read";
+    myLibrary[theIndex].color = "green";
+}
+
+//function that changes the status of a book to not read, and changes the border-color to accurately represent the status
+function notRead(theThis) {
+    let theIndex = theThis.parentNode.parentNode.getAttribute('data-index');
+    theThis.parentNode.parentNode.style.borderColor = "red";
+    myLibrary[theThis.parentNode.parentNode.getAttribute("data-index")].currentStatus = "not read";
+    myLibrary[theIndex].color = "red";
 }
 
 //event listener that calls the changeDisplay() function when the addBook image is clicked
