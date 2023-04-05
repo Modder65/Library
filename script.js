@@ -52,7 +52,7 @@ Book.prototype.createCard = function () {
     }
     removeCard = document.createElement('img');
     newCard.className = "book";
-    newCard.id = "newCard";
+    /*newCard.id = "newCard";*/
     textContainer.className = "textContainer";
     imgContainer.className = "imgContainer";
     removeCard.setAttribute("src", "imgs/book-remove-outline.svg");
@@ -102,7 +102,7 @@ function changeDisplay() {
 function displayArray() {
     let htmlText = "";
     for (let i = 0; i < myLibrary.length; i++) { 
-        htmlText += "<div class='book' id='newCard' data-index="+i+" style='border-color: "+myLibrary[i].color+"'>";
+        htmlText += "<div class='book' data-index="+i+" style='border-color: "+myLibrary[i].color+"'>";
             htmlText += "<div class='textContainer'>";
                 htmlText += "<p>"+myLibrary[i].title+"</p>";
                 htmlText += "<p>by: "+myLibrary[i].author+"</p>";
